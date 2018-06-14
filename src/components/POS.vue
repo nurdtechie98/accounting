@@ -20,6 +20,27 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Item Select</h6>
+                                <frappe-control
+                                    :docfield="docfield"
+                                    :value="value"
+                                    @change="value => updateValue(docfield.fieldname, value)"
+                                    :onlyInput="true"
+                                />
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Item Group</h6>
+                                <frappe-control
+                                    :docfield="docfield"
+                                    :value="value"
+                                    @change="value => updateValue(docfield.fieldname, value)"
+                                    :onlyInput="true"
+                                />
+                            </div>
+                        </div>
+                        </br>
                         <item-list :items="items" :add="onItemClick"></item-list>
                     </div>
                 </div>
@@ -44,6 +65,12 @@ export default {
       label: "Customer",
       fieldtype: "Link",
       target: "Party"
+    };
+    this.docfield={
+      fieldname: "name",
+      label: "Item Name",
+      fieldtype: "Link",
+      target: "Item"
     };
     return {
       items: [],
