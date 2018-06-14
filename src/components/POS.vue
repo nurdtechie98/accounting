@@ -5,6 +5,12 @@
                 <h1>Point of Sale</h1>
                 <div class="row">
                     <div class="col-md-6">
+                        <frappe-control
+                            :docfield="docfield"
+                            :value="value"
+                            @change="value => updateValue(docfield.fieldname, value)"
+                            :onlyInput="true"
+                        />
                         <transaction :items="lineItems" :edit="toggleEdit" :remove="removeItem"></transaction>
                         <div class="list-group">
                           <button class="list-group-item item" @click="createInvoice()">
@@ -24,6 +30,7 @@
 import Transaction from "./Transaction";
 import ItemList from "./ItemList";
 import frappe from "frappejs";
+import FrappeControl from './controls/FrappeControl';
 
 export default {
   components: {
@@ -31,6 +38,12 @@ export default {
     ItemList
   },
   data() {
+    this.docfield={
+      fieldname: "customer",
+      label: "Customer",
+      fieldtype: "Link",
+      target: "Party"
+    };
     return {
       items: [],
       lineItems: []
@@ -70,6 +83,9 @@ export default {
         }
       }
     },
+    updateValue(field, value) {
+                  this.value = value;
+                },
     async createInvoice(){
       var final_item=[];
       if (!(await frappe.db.exists('Party', 'Test Customer'))) {
@@ -86,7 +102,7 @@ export default {
       }
       frappe.insert({
             doctype:'Invoice',
-            customer: 'Test Customer',
+            customer: this.value,
             items:final_item
         });
       alert("Invoice added");
