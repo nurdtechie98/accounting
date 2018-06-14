@@ -5,12 +5,13 @@
                 <h1>Point of Sale</h1>
                 <div class="row">
                     <div class="col-md-6">
+                        <h6>Customer</h6>
                         <frappe-control
                             :docfield="docfield"
                             :value="value"
                             @change="value => updateValue(docfield.fieldname, value)"
                             :onlyInput="true"
-                        />
+                        /></br></br>
                         <transaction :items="lineItems" :edit="toggleEdit" :remove="removeItem"></transaction>
                         <div class="list-group">
                           <button class="list-group-item item" @click="createInvoice()">
