@@ -11,7 +11,9 @@
                             :value="value"
                             @change="value => updateValue(docfield.fieldname, value)"
                             :onlyInput="true"
-                        /></br></br>
+                        />
+                        <br>
+                        <br>
                         <transaction :items="lineItems" :edit="toggleEdit" :remove="removeItem"></transaction>
                         <div class="list-group">
                           <button class="list-group-item item" @click="createInvoice()">
@@ -23,24 +25,19 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h6>Item Select</h6>
-                                <frappe-control
-                                    :docfield="docfield"
-                                    :value="value"
-                                    @change="value => updateValue(docfield.fieldname, value)"
-                                    :onlyInput="true"
-                                />
+                                <input type="text" v-model="itemfilter" @change="created()">
                             </div>
                             <div class="col-md-6">
                                 <h6>Item Group</h6>
-                                <frappe-control
+                                <!--<frappe-control
                                     :docfield="docfield"
                                     :value="value"
                                     @change="value => updateValue(docfield.fieldname, value)"
                                     :onlyInput="true"
-                                />
+                                />-->
                             </div>
                         </div>
-                        </br>
+                        <br>
                         <item-list :items="items" :add="onItemClick"></item-list>
                     </div>
                 </div>
@@ -66,22 +63,26 @@ export default {
       fieldtype: "Link",
       target: "Party"
     };
+    /*
     this.docfield={
       fieldname: "name",
       label: "Item Name",
       fieldtype: "Link",
       target: "Item"
-    };
+    };*/
     return {
       items: [],
       lineItems: []
     };
   },
   async created(){ 
-  this.items=await frappe.db.getAll({
+  it=await frappe.db.getAll({
           doctype: "Item",
-          fields: ["name", "rate"]
+          fields: ["name", "rate"],
         })
+  this.items=it.filter(function(el) {
+      return el.name.toLowerCase().indexOf(this.itemfilter.toLowerCase()) > -1;
+      });
   },
   methods: {
     onItemClick: function(item) {
