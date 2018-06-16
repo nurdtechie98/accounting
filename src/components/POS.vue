@@ -7,7 +7,7 @@
                     <div class="col-md-6">
                         <h6>Customer</h6>
                         <frappe-control
-                            :docfield="docfield"
+                            :docfield="customerDocfield"
                             :value="value"
                             @change="value => updateValue(docfield.fieldname, value)"
                             :onlyInput="true"
@@ -24,16 +24,7 @@
                             <div class="col-md-6">
                                 <h6>Item Select</h6>
                                 <frappe-control
-                                    :docfield="docfield"
-                                    :value="value"
-                                    @change="value => updateValue(docfield.fieldname, value)"
-                                    :onlyInput="true"
-                                />
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Item Group</h6>
-                                <frappe-control
-                                    :docfield="docfield"
+                                    :docfield="itemDocfield"
                                     :value="value"
                                     @change="value => updateValue(docfield.fieldname, value)"
                                     :onlyInput="true"
@@ -60,13 +51,13 @@ export default {
     ItemList
   },
   data() {
-    this.docfield={
+    this.customerDocfield={
       fieldname: "customer",
       label: "Customer",
       fieldtype: "Link",
       target: "Party"
     };
-    this.docfield={
+    this.itemDocfield={
       fieldname: "name",
       label: "Item Name",
       fieldtype: "Link",
