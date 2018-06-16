@@ -136,6 +136,9 @@ export default {
       this.netTotal=tempdoc.netTotal;
     },
     async createInvoice(){
+      if(!this.lineItems.length)
+        alert("No items selcted");
+      else{
       var final_item=[];
       for(var i=0;i<this.lineItems.length;i++)
       {
@@ -152,6 +155,7 @@ export default {
             items:final_item
         });
       alert("Invoice added");
+        }
     }
   }
 };
