@@ -7,9 +7,9 @@
                     <div class="col-md-6">
                         <h6>Customer</h6>
                         <frappe-control
-                            :docfield="docfield"
+                            :docfield="customerDocfield"
                             :value="value"
-                            @change="value => updateValue(docfield.fieldname, value)"
+                            @change="value => updateValue(this.customerDocfield.fieldname, value)"
                             :onlyInput="true"
                         />
                         <br>
@@ -25,16 +25,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h6>Item Select</h6>
-                                <input type="text" v-model="itemfilter" @change="created()">
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Item Group</h6>
-                                <!--<frappe-control
-                                    :docfield="docfield"
-                                    :value="value"
-                                    @change="value => updateValue(docfield.fieldname, value)"
+                                <!--  <frappe-control
+                                    :docfield="itemDocfield"
+                                    :value="palue"
+                                    @change="palue => updateValue(docfield.fieldname, palue)"
                                     :onlyInput="true"
-                                />-->
+                                />     need to be filtered  -->
                             </div>
                         </div>
                         <br>
@@ -57,32 +53,31 @@ export default {
     ItemList
   },
   data() {
-    this.docfield={
+    this.customerDocfield={
       fieldname: "customer",
       label: "Customer",
       fieldtype: "Link",
       target: "Party"
     };
-    /*
-    this.docfield={
+    this.itemDocfield={
       fieldname: "name",
       label: "Item Name",
       fieldtype: "Link",
       target: "Item"
-    };*/
+    };
     return {
       items: [],
       lineItems: []
     };
   },
   async created(){ 
-  it=await frappe.db.getAll({
+  this.items=await frappe.db.getAll({
           doctype: "Item",
           fields: ["name", "rate"],
         })
-  this.items=it.filter(function(el) {
+  /*this.items=it.filter(function(el) {
       return el.name.toLowerCase().indexOf(this.itemfilter.toLowerCase()) > -1;
-      });
+      })*/;
   },
   methods: {
     onItemClick: function(item) {
@@ -115,11 +110,15 @@ export default {
     updateValue(field, value) {
                   this.value = value;
                 },
+    /*async tempInvoice(){
+      var temp_item=[];
+      let todos = await frappe.db.getAll({
+        doctype:'Invoice', 
+        fields:['name'],
+        });
+    },*/
     async createInvoice(){
       var final_item=[];
-      if (!(await frappe.db.exists('Party', 'Test Customer'))) {
-        await frappe.insert({doctype:'Party', name:'Test Customer'})
-      }
       for(var i=0;i<this.lineItems.length;i++)
       {
         console.log(this.lineItems[i].item.name+" "+this.lineItems[i].numberOfItems);
