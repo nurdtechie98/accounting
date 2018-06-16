@@ -14,7 +14,7 @@
                         />
                         <br>
                         <br>
-                        <transaction :items="lineItems" :edit="toggleEdit" :remove="removeItem"></transaction>
+                        <transaction :items="lineItems" :edit="toggleEdit" :remove="removeItem" ></transaction>
                         <div class="list-group">
                           <button class="list-group-item item" @click="createInvoice()">
                               <strong>Create Invoice</strong>
@@ -25,12 +25,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h6>Item Select</h6>
-                                <!--  <frappe-control
+                                <frappe-control
                                     :docfield="itemDocfield"
                                     :value="palue"
                                     @change="palue => updateValue(docfield.fieldname, palue)"
                                     :onlyInput="true"
-                                />     need to be filtered  -->
+                                />
                             </div>
                         </div>
                         <br>
@@ -74,10 +74,12 @@ export default {
   this.items=await frappe.db.getAll({
           doctype: "Item",
           fields: ["name", "rate"],
-        })
+        });
+      this.grandTotal=0;
+      this.netTotal=0;
   /*this.items=it.filter(function(el) {
       return el.name.toLowerCase().indexOf(this.itemfilter.toLowerCase()) > -1;
-      })*/;
+      })*/
   },
   methods: {
     onItemClick: function(item) {
@@ -91,10 +93,11 @@ export default {
           break;
         }
       }
-
+  
       if (!found) {
         this.lineItems.push({ item: item, numberOfItems: 1, editing: false });
       }
+      this.tempInvoice();
     },
     toggleEdit: function(lineItem) {
       lineItem.editing = !lineItem.editing;
@@ -106,17 +109,32 @@ export default {
           break;
         }
       }
+      this.tempInvoice();
     },
     updateValue(field, value) {
                   this.value = value;
                 },
-    /*async tempInvoice(){
+    async tempInvoice(){
       var temp_item=[];
-      let todos = await frappe.db.getAll({
-        doctype:'Invoice', 
-        fields:['name'],
+      for(var i=0;i<this.lineItems.length;i++)
+      {
+        console.log(this.lineItems[i].item.name+" "+this.lineItems[i].numberOfItems);
+        var temp={
+          item:this.lineItems[i].item.name,
+          quantity:this.lineItems[i].numberOfItems
+        };
+        temp_item.push(temp);
+      }
+      let tempdoc = await frappe.newDoc({
+        doctype: 'Invoice', 
+        name: 'something',
+        customer:'Test Customer',
+        items:temp_item
         });
-    },*/
+      await tempdoc.applyChange()
+      this.grandTotal=tempdoc.grandTotal;
+      this.netTotal=tempdoc.netTotal;
+    },
     async createInvoice(){
       var final_item=[];
       for(var i=0;i<this.lineItems.length;i++)
