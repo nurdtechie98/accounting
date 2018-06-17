@@ -15,6 +15,22 @@
                         <br>
                         <br>
                         <transaction :items="lineItems" :edit="toggleEdit" :remove="removeItem" ></transaction>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>Subtotal:</td>
+                                    <td>{{ this.subTotal }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tax:</td>
+                                    <td>{{ this.taxAmount }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total:</td>
+                                    <td>{{ this.totalAmount }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <div class="list-group">
                           <button class="list-group-item item" @click="createInvoice()">
                               <strong>Create Invoice</strong>
@@ -75,8 +91,9 @@ export default {
           doctype: "Item",
           fields: ["name", "rate"],
         });
-      this.grandTotal=0;
-      this.netTotal=0;
+      this.subTotal=0;
+      this.taxAmount=0;
+      this.totalAmount=0;
   /*this.items=it.filter(function(el) {
       return el.name.toLowerCase().indexOf(this.itemfilter.toLowerCase()) > -1;
       })*/
@@ -89,6 +106,7 @@ export default {
       for (var i = 0; i < this.lineItems.length; i++) {
         if (this.lineItems[i].item === item) {
           this.lineItems[i].numberOfItems++;
+          this.updateInvoice();
           found = true;
           break;
         }
@@ -96,8 +114,9 @@ export default {
   
       if (!found) {
         this.lineItems.push({ item: item, numberOfItems: 1, editing: false });
+        this.updateInvoice();
       }
-      this.tempInvoice();
+      
     },
     toggleEdit: function(lineItem) {
       lineItem.editing = !lineItem.editing;
@@ -109,7 +128,7 @@ export default {
           break;
         }
       }
-      this.tempInvoice();
+      this.updateInvoice();
     },
     updateValue(field, value) {
                   this.value = value;
@@ -134,6 +153,15 @@ export default {
       await tempdoc.applyChange()
       this.grandTotal=tempdoc.grandTotal;
       this.netTotal=tempdoc.netTotal;
+    },
+    updateInvoice(){
+      this.tempInvoice().then(this.updateVal());
+    },
+    updateVal(){
+      this.subTotal=this.netTotal;
+      this.taxAmount=this.grandTotal-this.netTotal;
+      this.totalAmount=this.grandTotal;
+      console.log(this.grandTotal+" "+this.netTotal);
     },
     async createInvoice(){
       var final_item=[];
