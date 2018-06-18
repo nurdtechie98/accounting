@@ -89,7 +89,8 @@ export default {
       grandTotal: 0 ,
       netTotal: 0,
       dataready: true,
-      tempdoc:null
+      tempdoc:null,
+      value:""
     };
   },
   async created(){ 
@@ -109,7 +110,6 @@ export default {
       for (var i = 0; i < this.lineItems.length; i++) {
         if (this.lineItems[i].item === item) {
           this.lineItems[i].numberOfItems++;
-          this.tempInvoice();
           found = true;
           break;
         }
@@ -117,9 +117,8 @@ export default {
   
       if (!found) {
         this.lineItems.push({ item: item, numberOfItems: 1, editing: false });
-        this.tempInvoice();
       }
-      
+      this.tempInvoice();
     },
     toggleEdit: function(lineItem) {
       lineItem.editing = !lineItem.editing;
@@ -151,7 +150,7 @@ export default {
       this.tempdoc = await frappe.newDoc({
         doctype: 'Invoice', 
         name: 'something',
-        customer:'Test Customer',
+        customer:'chirag shetty',
         items:temp_item
         });
       await this.tempdoc.applyChange();
@@ -161,22 +160,33 @@ export default {
       this.dataready=true;
     },
     async createInvoice(){
-      var final_item=[];
-      for(var i=0;i<this.lineItems.length;i++)
-      {
-        console.log(this.lineItems[i].item.name+" "+this.lineItems[i].numberOfItems);
-        var temp={
-          item:this.lineItems[i].item.name,
-          quantity:this.lineItems[i].numberOfItems
-        };
-        final_item.push(temp);
+      if(!this.lineItems.length)
+        alert("No items selected");
+      else{
+        if(this.value=="")
+        {
+          alert("No customer Added");
+        }
+        else
+        {
+          var final_item=[];
+          for(var i=0;i<this.lineItems.length;i++)
+          {
+            console.log(this.lineItems[i].item.name+" "+this.lineItems[i].numberOfItems);
+            var temp={
+              item:this.lineItems[i].item.name,
+              quantity:this.lineItems[i].numberOfItems
+            };
+            final_item.push(temp);
+          }
+          frappe.insert({
+                doctype:'Invoice',
+                customer: this.value,
+                items:final_item
+            });
+          alert("Invoice added");
+        }
       }
-      frappe.insert({
-            doctype:'Invoice',
-            customer: this.value,
-            items:final_item
-        });
-      alert("Invoice added");
     }
   }
 };
