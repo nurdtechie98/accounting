@@ -15,22 +15,24 @@
                         <br>
                         <br>
                         <transaction :items="lineItems" :edit="toggleEdit" :remove="removeItem" ></transaction>
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>Subtotal:</td>
-                                    <td>{{ this.subTotal }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Tax:</td>
-                                    <td>{{ this.taxAmount }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total:</td>
-                                    <td>{{ this.totalAmount }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div v-if="dataready">
+                          <table class="table">
+                              <tbody>
+                                  <tr>
+                                      <td>Subtotal:</td>
+                                      <td>{{ this.netTotal }}</td>
+                                  </tr>
+                                  <tr>
+                                      <td>Tax:</td>
+                                      <td>{{ this.grandTotal-this.netTotal }}</td>
+                                  </tr>
+                                  <tr>
+                                      <td>Total:</td>
+                                      <td>{{ this.grandTotal }}</td>
+                                  </tr>
+                                </tbody>
+                          </table>
+                        </div>
                         <div class="list-group">
                           <button class="list-group-item item" @click="createInvoice()">
                               <strong>Create Invoice</strong>
@@ -83,7 +85,11 @@ export default {
     };
     return {
       items: [],
-      lineItems: []
+      lineItems: [],
+      grandTotal: 0 ,
+      netTotal: 0,
+      dataready: true,
+      tempdoc:null
     };
   },
   async created(){ 
@@ -91,9 +97,6 @@ export default {
           doctype: "Item",
           fields: ["name", "rate"],
         });
-      this.subTotal=0;
-      this.taxAmount=0;
-      this.totalAmount=0;
   /*this.items=it.filter(function(el) {
       return el.name.toLowerCase().indexOf(this.itemfilter.toLowerCase()) > -1;
       })*/
@@ -106,7 +109,7 @@ export default {
       for (var i = 0; i < this.lineItems.length; i++) {
         if (this.lineItems[i].item === item) {
           this.lineItems[i].numberOfItems++;
-          this.updateInvoice();
+          this.tempInvoice();
           found = true;
           break;
         }
@@ -114,7 +117,7 @@ export default {
   
       if (!found) {
         this.lineItems.push({ item: item, numberOfItems: 1, editing: false });
-        this.updateInvoice();
+        this.tempInvoice();
       }
       
     },
@@ -128,12 +131,13 @@ export default {
           break;
         }
       }
-      this.updateInvoice();
+      this.tempInvoice();
     },
     updateValue(field, value) {
                   this.value = value;
                 },
     async tempInvoice(){
+      this.dataready=false;
       var temp_item=[];
       for(var i=0;i<this.lineItems.length;i++)
       {
@@ -144,24 +148,17 @@ export default {
         };
         temp_item.push(temp);
       }
-      let tempdoc = await frappe.newDoc({
+      this.tempdoc = await frappe.newDoc({
         doctype: 'Invoice', 
         name: 'something',
         customer:'Test Customer',
         items:temp_item
         });
-      await tempdoc.applyChange()
-      this.grandTotal=tempdoc.grandTotal;
-      this.netTotal=tempdoc.netTotal;
-    },
-    updateInvoice(){
-      this.tempInvoice().then(this.updateVal());
-    },
-    updateVal(){
-      this.subTotal=this.netTotal;
-      this.taxAmount=this.grandTotal-this.netTotal;
-      this.totalAmount=this.grandTotal;
+      await this.tempdoc.applyChange();
+      this.grandTotal=this.tempdoc.grandTotal;
+      this.netTotal=this.tempdoc.netTotal;
       console.log(this.grandTotal+" "+this.netTotal);
+      this.dataready=true;
     },
     async createInvoice(){
       var final_item=[];
