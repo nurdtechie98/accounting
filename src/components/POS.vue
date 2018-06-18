@@ -77,6 +77,7 @@ export default {
         });
       this.grandTotal=0;
       this.netTotal=0;
+      this.value="";
   /*this.items=it.filter(function(el) {
       return el.name.toLowerCase().indexOf(this.itemfilter.toLowerCase()) > -1;
       })*/
@@ -128,7 +129,7 @@ export default {
       let tempdoc = await frappe.newDoc({
         doctype: 'Invoice', 
         name: 'something',
-        customer:'Test Customer',
+        customer:'chirag shetty',
         items:temp_item
         });
       await tempdoc.applyChange()
@@ -137,25 +138,32 @@ export default {
     },
     async createInvoice(){
       if(!this.lineItems.length)
-        alert("No items selcted");
+        alert("No items selected");
       else{
-      var final_item=[];
-      for(var i=0;i<this.lineItems.length;i++)
-      {
-        console.log(this.lineItems[i].item.name+" "+this.lineItems[i].numberOfItems);
-        var temp={
-          item:this.lineItems[i].item.name,
-          quantity:this.lineItems[i].numberOfItems
-        };
-        final_item.push(temp);
-      }
-      frappe.insert({
-            doctype:'Invoice',
-            customer: this.value,
-            items:final_item
-        });
-      alert("Invoice added");
+        if(this.value=="")
+        {
+          alert("No customer Added");
         }
+        else
+        {
+          var final_item=[];
+          for(var i=0;i<this.lineItems.length;i++)
+          {
+            console.log(this.lineItems[i].item.name+" "+this.lineItems[i].numberOfItems);
+            var temp={
+              item:this.lineItems[i].item.name,
+              quantity:this.lineItems[i].numberOfItems
+            };
+            final_item.push(temp);
+          }
+          frappe.insert({
+                doctype:'Invoice',
+                customer: this.value,
+                items:final_item
+            });
+          alert("Invoice added");
+        }
+      }
     }
   }
 };
