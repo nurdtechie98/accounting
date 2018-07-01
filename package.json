@@ -29,7 +29,8 @@
     "frappejs": "^0.0.7",
     "vue": "^2.5.2",
     "vue-flatpickr-component": "^7.0.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "formidable": "^1.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

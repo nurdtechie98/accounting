@@ -3,6 +3,7 @@ const server = require('frappejs/server');
 const frappe = require('frappejs');
 const naming = require('frappejs/model/naming');
 const registerReportMethods = require('../reports');
+const posRegister = require('../src/components/pos');
 
 module.exports = {
     async start() {
@@ -39,5 +40,6 @@ module.exports = {
         await naming.createNumberSeries('PREC-', 'PurchaseReceiptSettings');
 
         registerReportMethods();
+        posRegister();
     }
 }

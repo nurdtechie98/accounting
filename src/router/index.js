@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import ListAndForm from '@/components/ListAndForm'
 import SetupWizard from '@/pages/SetupWizard/SetupWizard'
 import POS from '@/components/pos/POS'
+import Fpick from '@/components/pos/Fpick'
 
 Vue.use(Router)
 
@@ -31,6 +32,12 @@ export default new Router({
       path: '/pos/',
       name: 'POS',
       component: POS,
+      props: true
+    },
+    {
+      path: '/fpick/',
+      name: 'Fpick',
+      component: Fpick,
       props: true
     }
     // {

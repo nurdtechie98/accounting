@@ -31,6 +31,12 @@ module.exports = {
                 "Day"
             ]
         },
+        /*{
+            fieldname: "image",
+            label: "Item Image",
+            fieldtype: "Link",
+            target: "Item"
+        },*/
         {
             fieldname: "incomeAccount",
             label: "Income Account",
