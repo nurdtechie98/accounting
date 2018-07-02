@@ -1,10 +1,11 @@
 module.exports = {
-    "name": "filecontent",
+    "name": "FileContent",
     "doctype": "DocType",
     "isSingle": 0,
     "istable": 0,
     "keywordFields": [
-        "name"
+        "name",
+        "path"
     ],
     "fields": [
         {
@@ -14,9 +15,9 @@ module.exports = {
             "required": 1
         },
         {
-            "fieldname":"path",
-            "label":"Path",
-            "fieldtype":"Data",
+            "fieldname": "path",
+            "label": "Path",
+            "fieldtype": "Data",
         }
     ]
 

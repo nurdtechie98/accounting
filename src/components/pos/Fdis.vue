@@ -3,17 +3,15 @@
         <div class="col-4 border-right">
             <frappe-list :doctype="doctype" :filters="filters" :key="doctype" />
         </div>
-        <div class="col-8">
-            <frappe-form v-if="name" :key="doctype + name" :doctype="doctype" :name="name" />
-            <div v-if="imgsec()">
-                <h1>Testing Bitch</h1>
-            </div>
+        <div v-if="name" class="col-8">
+            <frappe-form :key="doctype + name" :doctype="doctype" :name="name" />
+            <img :src="display()">
         </div>
     </div>
 </template>
 <script>
-import List from './List/List';
-import Form from './Form/Form';
+import List from '../List/List';
+import Form from '../Form/Form';
 
 export default {
     props: ['doctype', 'name', 'filters'],
@@ -22,15 +20,9 @@ export default {
         FrappeForm: Form
     },
     methods: {
-        imgsec(){
-            if(this.doctype=="FileContent")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        async display(){
+            let todo = await frappe.getDoc({doctype: 'FileContent', name:name});
+            return "../../../images"+todo.path;
         }
     }
 }

@@ -26,6 +26,9 @@ export default [
       },
       {
         label: 'Account', route: '#/list/Account'
+      },
+      {
+        label: 'Files', route: '#/list/FileContent'
       }
     ]
   },

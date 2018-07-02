@@ -54,6 +54,6 @@ module.exports = {
         EventSchedule: require('./doctype/EventSchedule/EventSchedule'),
         EventSettings: require('./doctype/EventSettings/EventSettings'),
 
-        FileContent: require('./doctype/FileContent/filecontent'),
+        FileContent: require('./doctype/FileContent/FileContent'),
     }
 }

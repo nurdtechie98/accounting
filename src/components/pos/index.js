@@ -15,7 +15,13 @@ function fileSaver(req){
     form.parse(req, function (err, fields, files) {
       var oldpath = files.filetoupload.path;
       var newpath = "../accounting/images/"+files.filetoupload.name;
-      //console.log(Object.keys(files));
+      console.log(fields.image_title);
+      console.log(files.filetoupload)
+      frappe.insert({
+        doctype:'FileContent',
+        name:fields.image_title,
+        path:files.filetoupload.name
+        })
       fs.rename(oldpath, newpath, function(err){
         if (err) throw err;
       });
