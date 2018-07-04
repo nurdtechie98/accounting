@@ -9,8 +9,8 @@
                             <label for="image_title">File Name</label>
                             <input class="list-group-item item" type='text' ref="image_title" name="image_title"><br><br>
                             <input class="list-group-item item" type="file" ref="image" name="filetoupload" @change="display()"><br><br>
-                            <!--<input class="list-group-item item" type="submit">-->
-                            <button @click="logic()">Submit</button>
+                            <input class="list-group-item item" type="submit">
+                            <!--<button @click="logic()">Submit</button>-->
                         </form>
                     </div>
                     <div v-if="imgshow" class="col-md-6">
