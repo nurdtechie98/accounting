@@ -67,7 +67,14 @@ export default {
     },
     openForm(name) {
         this.activeItem = name;
-        this.$router.push(`/edit/${this.doctype}/${name}`);
+        if(this.doctype=="FileContent")
+        {
+            this.$router.push(`/Fedit/${this.doctype}/${name}`);
+        }
+        else
+        {
+            this.$router.push(`/edit/${this.doctype}/${name}`);
+        }
     },
     async deleteCheckedItems() {
       await frappe.db.deleteMany(this.doctype, this.checkList);

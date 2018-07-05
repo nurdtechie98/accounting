@@ -1,0 +1,61 @@
+<template>
+    <div class="frappe-list-form row no-gutters">
+        <div class="col-4 border-right">
+            <frappe-list :doctype="doctype" :filters="filters" :key="doctype" />
+        </div>
+        <div class="col-8">
+            <frappe-form v-if="name" :key="doctype + name" :doctype="doctype" :name="name" />
+            <div v-if="onload" style="text-align:center">
+                <img :src="source()">
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import List from './List/List';
+import Form from './Form/Form';
+
+export default {
+    data(){
+        return{
+            onload:true,
+            src:"#",
+            lame:'-'
+        }
+    },
+    props: ['doctype', 'name', 'filters'],
+    components: {
+        FrappeList: List,
+        FrappeForm: Form
+    },
+    async mounted(){
+            this.onload=false;
+            //console.log("bleep");
+            let file = await frappe.getDoc('FileContent', this.name);
+            this.src = "../../static/"+file.path;
+            this.onload=true;
+            this.lame=this.name;
+    },
+    async updated(){
+        if(this.name!=this.lame)
+        {
+            this.onload=false;
+            //console.log("bleep");
+            let file = await frappe.getDoc('FileContent', this.name);
+            this.src = "../../static/"+file.path;
+            this.onload=true;
+            this.lame=this.name;
+        }
+    },
+    methods: {
+        source(){
+            return this.src;
+        },
+    }
+}
+</script>
+<style>
+.frappe-list-form {
+    min-height: calc(100vh - 4rem);
+}
+</style>

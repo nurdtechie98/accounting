@@ -14,7 +14,7 @@ function fileSaver(req){
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
       var oldpath = files.filetoupload.path;
-      var newpath = "../accounting/images/"+files.filetoupload.name;
+      var newpath = "../accounting/static/"+files.filetoupload.name;
       console.log(fields.image_title);
       console.log(files.filetoupload)
       frappe.insert({

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import ListAndForm from '@/components/ListAndForm'
+import FListAndForm from '@/components/FListAndForm'
 import SetupWizard from '@/pages/SetupWizard/SetupWizard'
 import POS from '@/components/pos/POS'
 import Fpick from '@/components/pos/Fpick'
@@ -19,6 +20,12 @@ export default new Router({
       path: '/edit/:doctype/:name',
       name: 'Form',
       component: ListAndForm,
+      props: true
+    },
+    {
+      path: '/Fedit/:doctype/:name',
+      name: 'Form',
+      component: FListAndForm,
       props: true
     },
     {

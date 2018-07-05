@@ -18,6 +18,7 @@ module.exports = {
             "fieldname": "path",
             "label": "Path",
             "fieldtype": "Data",
+            hidden:1
         }
     ]
 
